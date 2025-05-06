@@ -1,0 +1,128 @@
+type Query {
+  obtenerUsuarioPorEmail(email: String!): Usuario #✅
+  solicitudesPorFecha: [Solicitud!]! #NO IMPLEMENTADO
+  solicitudesPorAsignatura: [Solicitud!]! #NO IMPLEMENTADO
+  solicitudesDelProfesor(idUsuario: ID!): [Solicitud!]! #✅
+  stockInsumosDisponibles: [Insumo!]! #✅
+  listarAsignaturas: [Asignatura]! #✅
+  listarInsumos: [Insumo] #✅
+  listarLaboratorios: [Laboratorio] #✅
+  listarUsuarios: [Usuario] #✅
+  listarProfesores: [Usuario] #NO PROBADO - INNECESARIO
+  listarSolicitudes: [Solicitud!]! #✅
+  listarSolicitudesAprobadas: [Solicitud!]! #✅
+  listarSolicitudesRechazadas: [Solicitud!]! #✅
+}
+
+type Mutation {
+  confirmarSolicitud(idSolicitud: ID!): Solicitud! #✅
+  crearUsuario(usuarioDto: UsuarioDto): Usuario  #✅
+  modificarSolicitud(idSolicitud: ID!, input: SolicitudInput!): Solicitud! #NO PROBADO
+  eliminarSolicitud(idSolicitud: ID!): Boolean! #✅
+  crearSolicitud(input: CrearSolicitudInput!): Solicitud! #✅
+  forgotPassword(email: String): Boolean #NO PROBADO
+  updatePasswordByCode(code: String, password: String): Boolean #NO PROBADO
+  crearInsumo(input: InsumoInput!): Insumo #✅
+  modificarInsumo(id: ID!, input: InsumoInput!): Insumo #✅
+  eliminarInsumo(id: ID!): Boolean #✅
+  crearLaboratorio(nombre: String!, codigo: String!): Laboratorio #✅
+  crearAsignatura(nombre: String!, codigo: String!): Asignatura #✅
+  eliminarUsuario(usuarioId: ID!): Boolean! #✅
+}
+
+type Solicitud {
+  id: ID!
+  fechaSolicitud: String
+  fechaUso: String
+  horario: String
+  cantGrupos: Int
+  estado: Boolean
+  usuario: Usuario
+  asignatura: Asignatura
+  laboratorio: Laboratorio
+  insumos: [SolicitudInsumo!]
+}
+
+
+type Asignatura {
+  id: ID!
+  nombre: String!
+  codigo: String!
+}
+
+type Laboratorio {
+  id: ID!
+  nombre: String!
+  codigo: String!
+}
+
+
+type SolicitudInsumo {
+  id: ID!
+  insumo: Insumo!
+  cantidad: Float!
+}
+
+input SolicitudInput {
+  fechaUso: String
+  horario: String
+  cantGrupos: Int
+  estadoAlerta: String
+}
+
+input CrearSolicitudInput {
+  idUsuario: ID!
+  idAsignatura: ID!
+  idLaboratorio: ID!
+  fechaUso: String!
+  horario: String!
+  cantGrupos: Int!
+  insumos: [InsumoCantidadInput!]!
+}
+
+input InsumoCantidadInput {
+  idInsumo: ID!
+  cantidad: Float!
+}
+input UsuarioDto {
+  id: Int
+  nombre: String
+  apellido: String
+  email: String
+  password:String
+  accountLocked: Boolean
+  enabled: Boolean
+  roles: [Int]
+}
+
+type Role {
+  id: Int
+  name: String
+  usuarios:[Usuario]
+}
+type Usuario {
+  id: Int
+  nombre: String
+  apellido: String
+  email: String
+  password: String
+  telephone: String
+  accountLocked: Boolean
+  enabled: Boolean
+  roles: [Role]
+}
+
+type Insumo {
+  id: ID!
+  nombre: String
+  tipo: String
+  unidadMedida: String
+  stockDisponible: Int
+}
+
+input InsumoInput {
+  nombre: String!
+  tipo: String!
+  unidadMedida: String!
+  stockDisponible: Int!
+}
